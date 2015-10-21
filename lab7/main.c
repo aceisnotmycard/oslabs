@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
             printf("Cannot join thread %d\n", i);
             return EXIT_FAILURE;
         } else {
-            printf("retval = %lf\n", retval);
+            printf("retval = %lf\n", params[i].local_result);
             pi += params[i].local_result;
         }
     }

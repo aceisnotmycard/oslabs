@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
     int i = 0;
     pthread_t *threads = (pthread_t *) malloc(num_threads * sizeof(pthread_t));
     param *params = (param *) malloc(num_threads * sizeof(param));
+    param *retval;
     double pi = 0.0;
 
     for (i = 0; i < num_threads; i++) {
@@ -52,13 +53,12 @@ int main(int argc, char **argv) {
             return EXIT_FAILURE;
         }
     }
-
     for (i = 0; i < num_threads; i++) {
-        if (pthread_join(threads[i], (void **) params + i) != 0) {
+        if (pthread_join(threads[i], (void **) &retval) != 0) {
             printf("Cannot join thread %d\n", i);
             return EXIT_FAILURE;
         } else {
-            pi += params[i].local_result;
+            pi += retval->local_result;
         }
     }
 

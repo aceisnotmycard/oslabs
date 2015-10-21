@@ -12,21 +12,19 @@ typedef struct param {
 
 int num_threads = DEFAULT_NUM_THREADS;
 
-void * calculate_pi(param * p) {
-    int i = p->start_pos;
-
-    for (i; i < NUM_STEPS; i += num_threads) {
+param *calculate_pi(param *p) {
+    int i;
+    for (i = p->start_pos; i < NUM_STEPS; i += num_threads) {
         p->local_result += 1.0 / (i * 4.0 + 1.0);
         p->local_result -= 1.0 / (i * 4.0 + 3.0);
     }
-    printf("Local result: %lf\n", p->local_result);
     return p;
 }
 
 int main(int argc, char **argv) {
     switch (argc) {
         case 1:
-            printf("Using %d thread", DEFAULT_NUM_THREADS);
+            printf("Using %d threads \n", DEFAULT_NUM_THREADS);
             break;
         case 2:
             num_threads = atoi(argv[1]);
@@ -43,9 +41,7 @@ int main(int argc, char **argv) {
     int i = 0;
     pthread_t *threads = (pthread_t *) malloc(num_threads * sizeof(pthread_t));
     param *params = (param *) malloc(num_threads * sizeof(param));
-
     double pi = 0.0;
-    double retval = 0.0;
 
     for (i = 0; i < num_threads; i++) {
         params[i].local_result = 0.0;
@@ -57,17 +53,17 @@ int main(int argc, char **argv) {
     }
 
     for (i = 0; i < num_threads; i++) {
-        if (pthread_join(threads[i], params+i) != 0) {
+        if (pthread_join(threads[i], (void **) params + i) != 0) {
             printf("Cannot join thread %d\n", i);
             return EXIT_FAILURE;
         } else {
-            printf("retval = %lf\n", params[i].local_result);
             pi += params[i].local_result;
+            printf("pi/4 = %.16lf\n", pi);
         }
     }
 
     pi *= 4.0;
-    printf("Pi = %lf\n", pi);
+    printf("pi = %.16lf\n", pi);
 
     return EXIT_SUCCESS;
 }

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NUM_STEPS 20000
+#define NUM_STEPS 200000000
 #define DEFAULT_NUM_THREADS 2
 
 typedef struct param {

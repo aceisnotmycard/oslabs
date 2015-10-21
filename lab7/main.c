@@ -18,6 +18,7 @@ param *calculate_pi(param *p) {
         p->local_result += 1.0 / (i * 4.0 + 1.0);
         p->local_result -= 1.0 / (i * 4.0 + 3.0);
     }
+    printf("Thread %i finished with %.16lf\n", p->start_pos, p->local_result);
     return p;
 }
 
@@ -58,7 +59,6 @@ int main(int argc, char **argv) {
             return EXIT_FAILURE;
         } else {
             pi += params[i].local_result;
-            printf("pi/4 = %.16lf\n", pi);
         }
     }
 
